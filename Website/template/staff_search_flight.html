@@ -1,0 +1,530 @@
+{% extends 'base.html' %}
+
+{% block head %}
+    <title>Staff Flight</title>
+    <style>
+        body{
+            height: 1700px;
+            background-image: url("/static/airplane1.jpeg");
+            background-repeat: no-repeat;
+            background-size: 100% 100%;
+            filter: alpha(opacity=20)
+        }
+
+        div.modal-lg {
+            width: 1200px !important;
+            height: auto !important;
+        }
+
+        input[type='text'],
+        input[type='number'],
+        input[type='password'],
+        input[type='date'],
+        input[type='email'],
+
+        select,
+        textarea {
+            outline: none;
+            box-shadow: none !important;
+            border: 1px solid #ccc !important;
+        }
+        .sidebar-left {
+            position:fixed;
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            left:0px;
+            top:8%;
+            width: 15%;
+            background-color: #f1f1f1;
+            position:fixed;
+            height: 95%;
+        }
+
+        .sidebar-left li a {
+            margin-top:0px;
+            display: block;
+            color: #000;
+            padding: 8px 16px;
+            text-decoration: none;
+            position: relative;
+        }
+        .navbar-top{
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: #333;
+            opacity:1;
+            position: fixed;
+            top: 0;
+            left:0;
+            height:8%;
+            width: 100%;
+            z-index:1;
+        }
+
+        .navbar-text-li{
+            float: left;
+            font-size:130%;
+            height:100%;
+            margin-top:0px;
+            color: white;
+        }
+        .navbar-text-li-right{
+            float: right;
+            color: white;
+            font-size:130%;
+            height:100%;
+            margin-top:10px;
+            margin-right: 20px;
+        }
+        .navbar-text-li a{
+            display: block;
+            color: white;
+            text-align: center;
+            padding: 14px 16px;
+            height:100%;
+            text-decoration:none;
+            /* margin-left: 15%; */
+        }
+
+        .navbar-text-li a:hover:not(.navbar-text) {
+            background-color: #111;
+        }
+    </style>
+{% endblock %}
+<br>
+<br>
+<br>
+<br>
+
+{% block main %}
+        <ul class="navbar-top" id="navbar">
+            {% if username %}
+            <li class='navbar-text-li'><a class='navbar-text' href=''> Welcome, {{ username }} ! </a></li>
+            {% endif %}
+            <li class='navbar-text-li-right'><a class='navbar-text' href='/logout'>Logout</a></li>
+        </ul>
+
+        <ul class='sidebar-left' id='sidebar' method = 'post'>
+                <li id = 'home'>
+                    <a href = '/home_staff'>Home</a>
+                </li>
+                    <li id = 'flighthistory'>
+                        <a href = '/staff_search_flight'>Search Flights</a>
+                    </li>
+                    <li id = 'flights'>
+                        <a href = '/staff_update_flights'>Update Flights</a>
+                    </li>
+
+                    <li id = 'staff_allagents'>
+                            <a href = '/staff_allagents'>View all agent</a>
+                    </li>
+                    <li id = 'frequent_customer'>
+                        <a href = '/staff_frequent_customer'>View Frequent Customer</a>
+                    </li>
+                    <li id = 'view_report'>
+                            <a href = '/staff_view_report'>View Reports</a>
+                    </li>
+                    <li id = 'revenue'>
+                            <a href = '/staff_revenue'>View Revenue</a>
+                    </li>
+                    <li id = 'destination'>
+                            <a href = '/staff_destination'>View Destinations</a>
+                    </li>
+                </li>
+
+        </ul>
+        </div>
+    </div>
+    {% if flights %}
+    <br>
+    <h1 class="text-left" style="padding-left: 290px; padding-top: 100px">
+            Flight details for {{flights[0]['airline_name']}}:
+    </h1>
+    <br>
+    {% endif %}
+
+    {% if not flights %}
+    <br>
+    <h1 class="text-left" style="padding-left: 290px; padding-top: 100px">
+            Flight details:
+    </h1>
+    <br>
+    {% endif %}
+        <div class="container flight-content" id="flights" style="padding-top: 52px; padding-left: 180px; width: 1600px">
+            <div id="result">
+                <ul class="fligtdetails list-group list-group-flush">
+                    {% for flight in flights %}
+                        <li tabindex="0" class="search-result">
+                            <div class="row">
+                                <div class="col">
+                                    <div class="row">
+                                        <div class="col-lg-3">
+                                            <strong>{{ flight['airline_name'] }}</strong>
+                                            &nbsp; &nbsp;{{ flight['flight_num'] }} 
+                                        </div>
+                                        <div class="col-lg-3">
+                                            {{ flight['departure_time'] }} 
+                                        </div>
+                                        <div class="col-lg-3">
+                                            {{ flight['arrival_time'] }}
+                                        </div>
+                                        <div class="col-lg-2">
+                                            <strong>{{ flight['status'] }}</strong> 
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-lg-3">
+                                                Airplane id: {{ flight['airplane_id'] }}
+                                        </div>
+                                        <div class="col-md-2">
+                                                <strong>{{ flight['departure_airport'] }} </strong>
+                                        </div>
+                                        <div class="col-lg-2">
+                                                <img src="https://img.icons8.com/color/96/000000/right.png" style="width: 50px; height: 40px;">
+                                        </div>
+                                        <div class="col-md-2">
+                                                <strong>{{ flight['arrival_airport'] }}</strong>
+                                        </div>
+                                        {%if flight['status'] == "on time" %}
+                                            <div class="col">
+                                                <img src="https://img.icons8.com/color/96/000000/airplane-mode-on.png" style="width: 40px; height: 40px;">
+                                            </div>
+                                        {% endif %}
+                                        {%if flight['status'] == "delayed" %}
+                                            <div class="col">
+                                                <img src="https://img.icons8.com/color/96/000000/airplane-mode-off.png" style="width: 40px; height: 40px;">
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+
+                                <div class="col-md-1 col-md-1 col-sm-1" >
+                                    <div class="row">
+                                        Price: {{ flight['price'] }}
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+<br>
+<br>
+<!-- check flight status -->
+<div class="container" style="padding-top: 30px">
+        <div class="row" style="text-align: center;">
+            <div class="col-md-12 col-sm-12 col-lg-12">
+                <p style="font-size: 25px;"><strong>Check flight status below:</strong></p>
+            </div>
+        </div>
+    </div>
+    <form action="staff_search_flight" method="POST" >
+        <div class="container" id="checkflightstatus" style="padding-top: 24px; width: 750px">
+            <div class="row">
+                <div class="col-md-6 col-sm-6 col-lg-6">
+                    <div class="input-group mb-3">
+                        <input type="number" class="form-control" name="status_flight_number"
+                            placeholder="Flight number"
+                            aria-label="Search term"
+                            aria-describedby="basic-addon" value="{{ request.form.status_flight_number }}">
+                    </div>
+                </div>
+                <div class="col-md-6 col-sm-6 col-lg-6">
+                    <div class="input-group mb-3">
+                        <input type="text" onfocus="(this.type='date')" class="form-control" name="status_depart_date_time"
+                            placeholder="Departure date"
+                            aria-label="Search term"
+                            aria-describedby="basic-addon" value="{{ request.form.status_depart_date_time }}">
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6 col-sm-6 col-lg-6">
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" name="status_airline_name"
+                            placeholder="Airline Name"
+                            aria-label="Search term"
+                            aria-describedby="basic-addon" value="{{ request.form.status_airline_name }}">
+                    </div>
+                </div>
+                <div class="col-md-6 col-sm-6 col-lg-6">
+                    <div class="input-group mb-3">
+                        <button class="btn btn-info btn-block" type="submit" style="font-size: 18px">
+                            <strong>Check!</strong>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+<br>
+{% if flights_status %}
+<ul class="list-group">
+    <center>
+    <li class="list-group-item list-group-item-info" style = 'width:400px'>The flight you checked is: {{flights_status}}</li>
+    </center>>
+</ul>
+{% endif %}
+
+<!-- search for flights using forms -->
+    <!-- <div class="container" style="padding-top: 100px;"> -->
+    <div class="container" style="padding-top: 100px">
+        <div class="row" style="text-align: center;">
+            <div class="col-md-12 col-sm-12 col-lg-12">
+                <p style="font-size: 25px;"><strong>Search flights below: </strong></p>
+            </div>
+        </div>
+    </div>
+    <br>
+    <form action="staff_search_flight" method="POST" >
+        <div class="container" id="searchforflight" style="padding-top: 24px">
+            <div class="row">
+                <div class="col-md-6 col-sm-6 col-lg-6">
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" name="depart_city"
+                            placeholder="Source city"
+                            aria-label="Search term"
+                            aria-describedby="basic-addon" value="{{ request.form.depart_city }}">
+                    </div>
+                </div>
+                <div class="col-md-6 col-sm-6 col-lg-6">
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" name="arrive_city"
+                            placeholder="Destination city"
+                            aria-label="Search term"
+                            aria-describedby="basic-addon" value="{{ request.form.arrive_city }}">
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6 col-sm-6 col-lg-6">
+                    <div class="input-group mb-3">
+                        <input type="text" onfocus="(this.type='date')" class="form-control" name="city_date"
+                            placeholder="YY/MM/DD"
+                            aria-label="Search term"
+                            aria-describedby="basic-addon" value="{{ request.form.city_date }}">
+                    </div>
+                </div>
+                <div class="col-md-6 col-sm-6 col-lg-6">
+                    <div class="input-group mb-3">
+                        <button class="btn btn-info btn-block" type="submit" style="font-size: 18px" onclick="">
+                            <strong>Search!</strong>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container" id="searchforflight" style="padding-top: 24px;">
+            <div class="row">
+                <div class="col-md-6 col-sm-6 col-lg-6">
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" name="airport_depart_name"
+                            placeholder="Source airport"
+                            aria-label="Search term"
+                            aria-describedby="basic-addon" value="{{ request.form.airport_depart_name }}">
+                    </div>
+                </div>
+                <div class="col-md-6 col-sm-6 col-lg-6">
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" name="airport_arrive_name"
+                            placeholder="Destination airport"
+                            aria-label="Search term"
+                            aria-describedby="basic-addon" value="{{ request.form.airport_arrive_name }}">
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6 col-sm-6 col-lg-6">
+                    <div class="input-group mb-3">
+                        <input type="text" onfocus="(this.type='date')" class="form-control" name="airport_date"
+                            placeholder="YY/MM/DD"
+                            aria-label="Search term"
+                            aria-describedby="basic-addon" value="{{ request.form.depart_date }}">
+                    </div>
+                </div>
+                <div class="col-md-6 col-sm-6 col-lg-6">
+                    <div class="input-group mb-3">
+                        <button class="btn btn-info btn-block" type="submit" style="font-size: 18px" onclick="" value = "staff_search_flight">
+                            <strong>Search!</strong>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+    <br>
+    <form action="staff_search_flight" method="GET">
+    <div class="container flight-content" id="flights1" style="padding-top: 42px; padding-left: 100px; width: 1600px">
+                <div id="result">
+                    <ul class="fligtdetails list-group list-group-flush">
+                        {% for flight1 in flights1 %}
+                            <li tabindex="0" class="search-result">
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="row">
+                                            <div class="col-lg-3">
+                                                <strong>{{ flight1['airline_name'] }}</strong>
+                                                &nbsp; &nbsp;{{ flight1['flight_num'] }} 
+                                            </div>
+                                            <div class="col-lg-3">
+                                                {{ flight1['departure_time'] }} 
+                                            </div>
+                                            <div class="col-lg-3">
+                                                {{ flight1['arrival_time'] }}
+                                            </div>
+                                            <div class="col-lg-2">
+                                                <strong>{{ flight1['status'] }}</strong> 
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-lg-3">
+                                                    Airplane id: {{ flight1['airplane_id'] }}
+                                            </div>
+                                            <div class="col-md-2">
+                                                    <strong>{{ flight1['departure_airport'] }} </strong>
+                                            </div>
+                                            <div class="col-lg-2">
+                                                    <img src="https://img.icons8.com/color/96/000000/right.png" style="width: 50px; height: 40px;">
+                                            </div>
+                                            <div class="col-md-2">
+                                                    <strong>{{ flight1['arrival_airport'] }}</strong>
+                                            </div>
+                                            {%if flight1['status'] == "on time" %}
+                                                <div class="col">
+                                                    <img src="https://img.icons8.com/color/96/000000/airplane-mode-on.png" style="width: 40px; height: 40px;">
+                                                </div>
+                                            {% endif %}
+                                            {%if flight1['status'] == "delayed" %}
+                                                <div class="col">
+                                                    <img src="https://img.icons8.com/color/96/000000/airplane-mode-off.png" style="width: 40px; height: 40px;">
+                                                </div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+    
+                                    <div class="col-md-1 col-md-1 col-sm-1" >
+                                        <div class="row">
+                                            Price: {{ flight1['price'] }}
+                                        </div>
+                                    </div>
+    
+                                </div>
+    
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+    </form>
+    <br>
+    <form action="staff_search_flight" method="GET" >
+        <div class="container flight-content" id="flights" style="padding-top: 42px; padding-left: 180px; width: 1000px">
+                <div id="result">
+                    <div>
+                        <ul class="fligtdetails list-group list-group-flush">
+                            {% for flight2 in flights2 %}
+                                {% if flight2 %}
+                                    <li tabindex="0" class="search-result">
+                                        <div class="row">
+                                            <div class="col-md-11 col-lg-11 col-sm-11">
+                                                <div class="row">
+                                                    <div class="col-md-3 col-lg-3 col-sm-3">
+                                                        Airplane <strong>{{ flight2['flight_num'] }}</strong>
+                                                    </div>
+                                                        <div class="col-md-2 col-lg-2 col-sm-2">
+                                                            From:  <strong>{{ flight2['departure_airport'] }}</strong>
+                                                        </div>
+                                                        <div class="col-md-2 col-lg-2 col-sm-2 text-center">
+                                                            <img src="https://img.icons8.com/color/96/000000/right.png"
+                                                                style="width: 50px; height: 40px;">
+                                                        </div>
+                                                        <div class="col-md-2 col-lg-2 col-sm-2">
+                                                            To:  <strong>{{ flight2['arrival_airport'] }}</strong>
+                                                        </div>
+                                                    <div class="col-md-2 col-lg-2 col-sm-2 text-center">
+                                                        <strong>{{ flight2['status'] }}
+                                                    </div></strong>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                {% endif %}
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+        </div>
+    </form>
+
+
+<!-- search customer for flights -->
+<div class="container" style="padding-top: 50px;">
+    <div class="row" style="text-align: center;">
+        <div class="col-md-12 col-sm-12 col-lg-12">
+            <p style="font-size: 25px;"><strong>Search customers for a flight</strong></p>
+        </div>
+    </div>
+</div>
+
+<form action="staff_search_flight" method="POST"  style="padding-top: 20px">
+        <div class="container" id="searchforflight" style="padding-top: 24px">
+            <div class="row">
+                <div class="col-md-6 col-sm-6 col-lg-6">
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" name="customer_airline_name"
+                            placeholder="Airline name"
+                            aria-label="Search term"
+                            aria-describedby="basic-addon" value="{{ request.form.customer_airline_name }}">
+                    </div>
+                </div>
+                <div class="col-md-6 col-sm-6 col-lg-6">
+                        <div class="input-group mb-3">
+                            <input type="text" class="form-control" name="customer_flight_number"
+                                placeholder="Flight number"
+                                aria-label="Search term"
+                                aria-describedby="basic-addon" value="{{ request.form.customer_flight_number }}">
+                        </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6 col-sm-6 col-lg-6">
+                </div>
+                <div class="col-md-6 col-sm-6 col-lg-6">
+                    <div class="input-group mb-3">
+                        <input type="text" onfocus="(this.type='date')" class="form-control" name="customer_depart_date_time"
+                            placeholder="Departure date and time"
+                            aria-label="Search term"
+                            aria-describedby="basic-addon" value="{{ request.form.customer_depart_date_time }}">
+                    </div>
+                </div>
+            </div>  
+            <div class="row">
+                <div class="col-md-6 col-sm-6 col-lg-6">
+                </div>
+                <div class="col-md-6 col-sm-6 col-lg-6">
+                    <div class="input-group mb-3s">
+                        <button class="btn btn-info btn-lg btn-block" type="submit">
+                            <strong>Search!</strong>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<br>
+<br>
+{% if flight_customer %}
+<ul class="list-group">
+    <center>
+    <li class="list-group-item list-group-item-info" style = 'width:600px'>The number of customers of the flight you checked is: {{flight_customer}}</li>
+    </center>>
+</ul>
+{% endif %}
+
+{% endblock %}

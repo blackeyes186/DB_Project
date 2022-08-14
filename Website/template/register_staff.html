@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+	</head>
+	<style>
+		body {
+			background-image: url('static/sky.jpg');
+        	background-size: 100%;
+			text-align: left;
+		}
+	
+		h1 {
+			padding: 3%;
+		}
+	
+		form {
+			padding-right: 33%;
+			padding-left: 33%;
+			padding-bottom: 30px;
+		}
+	
+		.error {
+			margin: auto;
+			margin-bottom: 10px;
+			width: 450px;
+		}
+	</style>
+
+
+<body>
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-warning" role="alert">
+				  <p class="mb-0">Oops! {{ message }}</p>
+				</div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+    <br>
+
+	<h1 align='center'>Sign up as a Airline staff </h1>
+	<form action="/register_staff" method="POST">
+		<div class="form-group">
+			<label>User name: </label>
+			<input type="text" class="form-control" name = "username"required/ placeholder="Create a user name">
+		</div>
+		<div class="form-group">
+			<label>Password: </label>
+			<input type="password" class="form-control" name = "password"required/ placeholder="Enter your password here">
+		</div>
+		<div class="form-group">
+			<label>Confirm password: </label>
+			<input type="password" class="form-control" name = "confirm_password"required/ placeholder="Enter your password again">
+		</div>
+		<div class="form-row">
+		    <div class="col">
+		    	<label>First name:</label>
+		    	<input type="text" class="form-control" name = "first_name" placeholder="First name">
+		    </div>
+		    <div class="col">
+		    	<label>Last name:</label>
+		      	<input type="text" class="form-control" name = "last_name" placeholder="Last name">
+		    </div>
+		</div>
+		<br>
+		<div class="form-group">
+			<label>Date of birth:</label>
+			<input type="date" class="form-control" name = "date_of_birth"required/>
+		</div>
+		<div class="form-group">
+			<label>Airline name: </label>
+			<input type="text" class="form-control" name = "airline_name"required/ placeholder="China Eastern">
+		</div>
+
+		
+		<br>
+		<button class="btn btn-secondary btn-block" type="submit" value="Register">Register</button>
+	    <br>
+
+
+	</form>
+
+<a href="/register"><center>Go back</a>
+<br>
+<br>
+
+
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>	
+
+</body>
+</html>

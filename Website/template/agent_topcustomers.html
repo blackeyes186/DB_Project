@@ -1,0 +1,260 @@
+{% extends 'base.html' %}
+
+{% block head %}
+    <title>Top Customers</title>
+    <style>
+        body{
+            height: 1250px;
+            background-image: url("/static/airplane1.jpeg");
+            background-repeat: no-repeat;
+            background-size: 100% 100%;
+            filter: alpha(opacity=20)
+        }
+
+        div.modal-lg {
+            width: 1200px !important;
+            height: auto !important;
+        }
+
+        input[type='text'],
+        input[type='number'],
+        input[type='password'],
+        input[type='date'],
+        input[type='email'],
+
+        select,
+        textarea {
+            outline: none;
+            box-shadow: none !important;
+            border: 1px solid #ccc !important;
+        }
+        .sidebar-left {
+            position:fixed;
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            left:0px;
+            top:8%;
+            width: 15%;
+            background-color: #f1f1f1;
+            position:fixed;
+            height: 95%;
+        }
+
+        .sidebar-left li a {
+            margin-top:0px;
+            display: block;
+            color: #000;
+            padding: 8px 16px;
+            text-decoration: none;
+            position: relative;
+        }
+        .navbar-top{
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: #333;
+            opacity:1;
+            position: fixed;
+            top: 0;
+            left:0;
+            height:8%;
+            width: 100%;
+            z-index:1;
+        }
+
+        .navbar-text-li{
+            float: left;
+            font-size:130%;
+            height:100%;
+            margin-top:0px;
+            color: white;
+            /* margin-left: 15%; */
+        }
+        .navbar-text-li-right{
+            float: right;
+            color: white;
+            font-size:130%;
+            height:100%;
+            margin-top:10px;
+            margin-right: 20px;
+        }
+        .navbar-text-li a{
+            display: block;
+            color: white;
+            text-align: center;
+            padding: 14px 16px;
+            height:100%;
+            text-decoration:none;
+            /* margin-left: 15%; */
+        }
+
+        .navbar-text-li a:hover:not(.navbar-text) {
+            background-color: #111;
+        }
+    </style>
+{% endblock %}
+<br>
+<br>
+<br>
+<br>
+
+{% block main %}
+
+    {% if username %}
+        <div class="container alert alert-success alert-dismissible" role="success"
+            style="padding-top: 5px; padding-bottom: 5px" id = "username">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"
+                    style="padding-top: 3px; padding-bottom: 0px; height: 26px"><span
+                    aria-hidden="true">&times;</span></button>
+            Welcome, {{ username }} !
+        </div>
+    {% endif %}
+        <!-- <div class="background"> -->
+
+        <ul class="navbar-top" id="navbar">
+            <li class='navbar-text-li'><a class='navbar-text' href=''>Welcome, {{ username }} ! </a></li>
+            <li class='navbar-text-li-right'><a class='navbar-text' href='/logout'>Logout</a></li>
+        </ul>
+
+
+        <ul class='sidebar-left' id='sidebar' method = 'post'>
+                <li id = 'home'>
+                    <a href = '/home_agent'>Home</a>
+                
+                    <li id = 'flighthistory'>
+                        <a href = '/agent_myflight'>My Flights</a>
+                    </li>
+                    <li id = 'flights'>
+                        <a href = '/agent_search'>Search Flights</a>
+                    </li>
+                    <li id = 'trackspending'>
+                            <a href = '/agent_purchasing'>Buy Tickets</a>
+                    </li>
+                    <li id = 'trackspending'>
+                            <a href = '/agent_mycommission'>My Commission</a>
+                    </li>
+                    <li id = 'trackspending'>
+                        <a href = '/agent_topcustomers'>Top Customers</a>
+                    </li>
+                </li>
+
+        </ul>
+        
+ <!--    </div> -->
+    <br>
+    <br>
+    <br>
+
+    <h3 class="text-left" style="padding-left: 290px">
+        Five customers with top number of tickets in the past 6 months:
+    </h3>
+
+
+    <!-- you need to include the shieldui css and js assets in order for the charts to work --> 
+    <link rel="stylesheet" type="text/css" href="http://www.shieldui.com/shared/components/latest/css/light/all.min.css">
+    <script type="text/javascript" src="http://www.shieldui.com/shared/components/latest/js/shieldui-all.min.js"> </script>
+
+    <canvas id="barChart" style="padding-top:50px; padding-left: 500px; display: block; max-width: 900px;max-height: 600px;"></canvas>
+
+<br>
+<br>
+    <h3 class="text-left" style="padding-left: 290px">
+        Five customers with top amount of commission in the last year:{{top_customer_tkts_label2}}
+    </h3>
+    <br>
+    <canvas id="commChart" style="padding-left: 500px; display: block; max-width: 900px;max-height: 600px;"></canvas>
+
+
+
+
+    <script>
+        var ctx = document.getElementById('barChart').getContext('2d');
+        var barChart = new Chart(ctx, {
+        type: 'bar',
+        data: {      
+        labels: [{% for item in top_customer_tkts %}
+                    "{{item['name']}}",
+                {% endfor %}],
+        datasets: [{
+        label: 'Number of Tickets',
+        data: [{% for item in top_customer_tkts %}
+            "{{item['num_of_tickets']}}",
+        {% endfor %}],
+        // data: [3,4],
+        backgroundColor: [
+        'rgba(255, 99, 132, 0.2)',
+        'rgba(54, 162, 235, 0.2)',
+        'rgba(255, 206, 86, 0.2)',
+        'rgba(75, 192, 192, 0.2)',
+        'rgba(153, 102, 255, 0.2)',
+        'rgba(255, 159, 64, 0.2)'
+        ],
+        borderColor: [
+        'rgba(255,99,132,1)',
+        'rgba(54, 162, 235, 1)',
+        'rgba(255, 206, 86, 1)',
+        'rgba(75, 192, 192, 1)',
+        'rgba(153, 102, 255, 1)',
+        'rgba(255, 159, 64, 1)'
+        ],
+        borderWidth: 1.0}]
+        },
+        options: {
+        scales: {
+        yAxes: [{
+        ticks: {
+        beginAtZero: true
+        }
+        }]
+        }
+        }
+        });
+
+        let ctxB2 = document.getElementById('commChart').getContext('2d');
+        let commchart = new Chart(ctxB2, {
+        type: 'bar',
+        data: {
+            labels: [{% for item in top_customer_comm %}
+                        "{{item['name']}}",
+                    {% endfor %}],
+        
+            datasets: [{
+            label: 'Commission',
+            data: [{% for item in top_customer_comm %}
+                        "{{item['sum_commission']}}",
+                    {% endfor %}],
+            backgroundColor: [
+                'rgba(255, 99, 132, 0.4)',
+                'rgba(54, 162, 235, 0.4)',
+                'rgba(255, 206, 86, 0.4)',
+                'rgba(75, 192, 192, 0.4)',
+                'rgba(153, 102, 255, 0.4)',
+                'rgba(255, 159, 64, 0.4)'
+                ],
+            borderColor: [
+                'rgba(255,99,132,1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(153, 102, 255, 1)',
+                'rgba(255, 159, 64, 1)'
+            ],
+            borderWidth: 1.0
+            }]
+            },
+            options: {
+            scales: {
+            yAxes: [{
+            ticks: {
+            beginAtZero: true
+            }
+            }]
+            }
+            }
+            });
+    </script>
+
+
+{% endblock %}

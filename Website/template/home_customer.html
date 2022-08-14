@@ -1,0 +1,294 @@
+{% extends 'base.html' %}
+
+{% block head %}
+    <title>Customer home page</title>
+    <style>
+        div.background {
+            height: 927px;
+            background-image: url("/static/airplane.jpg");
+            background-repeat: no-repeat;
+            opacity: 0.7;
+            background-size: 100% 100%;
+        }
+
+        div.modal-lg {
+            width: 1200px !important;
+            height: auto !important;
+        }
+
+
+        input[type='text'],
+        input[type='number'],
+        input[type='password'],
+        input[type='date'],
+        input[type='email'],
+
+        select,
+        textarea {
+            outline: none;
+            box-shadow: none !important;
+            border: 1px solid #ccc !important;
+        }
+        .sidebar-left {
+            position:fixed;
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            left:0px;
+            top:8%;
+            width: 15%;
+            background-color: #f1f1f1;
+            position:fixed;
+            height: 95%;
+            /* overflow: auto; */
+        }
+
+        .sidebar-left li a {
+            margin-top:0px;
+            display: block;
+            color: #000;
+            padding: 8px 16px;
+            text-decoration: none;
+            position: relative;
+        }
+        .navbar-top{
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: #333;
+            opacity:1;
+            position: fixed;
+            top: 0;
+            left:0;
+            height:8%;
+            width: 100%;
+        }
+
+        .navbar-text-li{
+            float: left;
+            font-size:130%;
+            height:100%;
+            margin-top:0px;
+            color: white;
+            /* margin-left: 15%; */
+        }
+        .navbar-text-li-right{
+            float: right;
+            color: white;
+            font-size:130%;
+            height:100%;
+            margin-top:10px;
+            margin-right: 20px;
+        }
+        .navbar-text-li a{
+            display: block;
+            color: white;
+            text-align: center;
+            padding: 14px 16px;
+            height:100%;
+            text-decoration:none;
+            /* margin-left: 15%; */
+        }
+
+        .navbar-text-li a:hover:not(.navbar-text) {
+            background-color: #111;
+        }
+    </style>
+{% endblock %}
+
+{% block main %}
+    {% if username %}
+        <div class="container alert alert-success alert-dismissible" role="success"
+             style="padding-top: 5px; padding-bottom: 5px">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"
+                    style="padding-top: 3px; padding-bottom: 0px; height: 26px"><span
+                    aria-hidden="true">&times;</span></button>
+            Welcome, {{ username }} !
+        </div>
+    {% endif %}
+    {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                        <div class="container alert alert-danger alert-dismissible" role="alert" style="padding-top: 0px">
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close" style="padding-top: 0px; padding-bottom: 0px"><span
+                                    aria-hidden="true">&times;</span></button>
+                            {{ messages }}
+                        </div>
+                {% endif %}
+            {% endwith %}
+    <div class="background">
+        <!-- <div style="padding-top: 382px;">
+            <form method="POST" action="">
+                <div class="container" id="searchforflight" style="padding-top: 24px;">
+                <div class="row">
+                    <div class="col-md-6 col-sm-6 col-lg-6">
+                        <div class="input-group mb-3">
+                            <input type="text" class="form-control" name="source_city"
+                                    placeholder="Source city"
+                                    aria-label="Search term"
+                                    aria-describedby="basic-addon" value="{{ request.form.source }}">
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-sm-6 col-lg-6">
+                        <div class="input-group mb-3">
+                            <input type="text" class="form-control" name="destination_city"
+                                    placeholder="Destination city"
+                                    aria-label="Search term"
+                                    aria-describedby="basic-addon" value="{{ request.form.destination }}">
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 col-sm-6 col-lg-6">
+                        <div class="input-group mb-3">
+                            <input type="text" onfocus="(this.type='date')" class="form-control" name="city_date"
+                                    placeholder="YY/MM/DD"
+                                    aria-label="Search term"
+                                    aria-describedby="basic-addon" value="{{ request.form.city_date }}">
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-sm-6 col-lg-6">
+                        <div class="input-group mb-3">
+                            <button class="btn btn-light btn-block" type="submit" style="font-size: 18px"
+                                    onclick="">
+                                <strong>Search!</strong>
+                            </button>
+                        </div>
+                    </div>
+
+                <div class="container" id="searchforflight" style="padding-top: 24px;">
+                    <div class="row">
+                        <div class="col-md-6 col-sm-6 col-lg-6">
+                            <div class="input-group mb-3">
+                                <input type="text" class="form-control" name="source_airport"
+                                        placeholder="Source airport"
+                                        aria-label="Search term"
+                                        aria-describedby="basic-addon" value="{{ request.form.source_airport }}">
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-sm-6 col-lg-6">
+                            <div class="input-group mb-3">
+                                <input type="text" class="form-control" name="destination_airport"
+                                        placeholder="Destination airport"
+                                        aria-label="Search term"
+                                        aria-describedby="basic-addon" value="{{ request.form.destination_airport }}">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 col-sm-6 col-lg-6">
+                            <div class="input-group mb-3">
+                                <input type="text" onfocus="(this.type='date')" class="form-control" name="airport_date"
+                                        placeholder="YY/MM/DD"
+                                        aria-label="Search term"
+                                        aria-describedby="basic-addon" value="{{ request.form.airport_date }}">
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-sm-6 col-lg-6">
+                            <div class="input-group mb-3">
+                                <button class="btn btn-light btn-block" type="submit" style="font-size: 18px"
+                                        onclick="">
+                                    <strong>Search!</strong>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div> -->
+            </form>
+        </div>
+    </div>
+        <ul class="navbar-top" id="navbar">
+               
+            <li class='navbar-text-li'><a class='navbar-text' href=''>Welcome! </a></li>
+            <li class='navbar-text-li-right'><a class='navbar-text' href='/logout'>Logout</a></li>
+        </ul>
+
+
+        <ul class='sidebar-left' id='sidebar' method = 'post'>
+                <li id = 'home'>
+                    <a href = '/home_customer'>Home</a>
+                </li>
+                    <li id = 'flighthistory'>
+                        <a href = '/myflight'>My Flights</a>
+                    </li>
+                    <li id = 'flights'>
+                        <a href = '/search_flights'>Search Flights</a>
+                    </li>
+                    <li id = 'trackspending'>
+                            <a href = '/purchasing'>Buy Tickets</a>
+                    </li>
+
+                    <li id = 'trackspending'>
+                        <a href = '/myspending'>My Spending</a>
+                    </li>
+                </li>
+
+        </ul>
+        </div>
+    </div>
+    <!-- ?????????????????????????????????
+    {% if spend_range1 and spend_range2 %}
+    <div class="container">
+        <h1 style="font-size: 18px;">Total amount of money spent in the range:</h1>
+        <span>{{ spend_range1[0]['dey'] }}</span>
+        <canvas id="mySpending1"></canvas>
+    </div>
+    {% endif %}
+
+    {% if flights %}
+        <div class="container flight-content" id="flights" style="padding-top: 42px;">
+            <h3 class="text-center">
+                Flight details
+            </h3>
+            <div id="result">
+                <ul class="fligtdetails list-group list-group-flush">
+                    {% for flight in flights %}
+                        <li tabindex="0" class="search-result">
+                            <div class="row">
+                                <div class="col-md-10 col-lg-10 col-sm-10" id="col-left">
+                                    <div class="row">
+                                        <div class="col col-md-4 col-lg-4 col-sm-4">
+                                            <font style="font-size: 20px"><strong>{{ flight['airline_name'] }}</strong></font>
+                                            &nbsp; &nbsp;
+                                            {{ flight['flight_num'] }}
+                                        </div>
+                                        <div class="col col-md-4 col-lg-4 col-sm-4 text-center">
+                                            <strong>{{ flight['status'] }}</strong>
+                                        </div>
+                                        <div class="col col-md-4 col-lg-4 col-sm-4">
+                                            Airplane id: {{ flight['Airplane_ID'] }}
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col col-md-4 col-lg-4 col-sm-4">
+                                            {{ flight['Airport_depart_name'] }} &nbsp;
+                                            &nbsp; {{ flight['depart_date_time'] }}
+                                        </div>
+                                        <div class="col col-md-4 col-lg-4 col-sm-4 text-center">
+                                            <img src="http://hk.ceair.com/public/system/assets/images/nonstop.svg"
+                                                style="width: 180px; height: 30px;">
+                                        </div>
+                                        <div class="col col-md-4 col-lg-4 col-sm-4">
+                                            {{ flight['Airport_arrive_name'] }} &nbsp;
+                                            &nbsp; {{ flight['arrive_date_time'] }}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-2 col-lg-2 col-sm-2" id="col-right">
+                                    <div class="row">
+                                        Price: {{ flight['base_price'] }}
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    {% endif %}
+    <br>
+    <br>
+ -->
+
+
+{% endblock %}

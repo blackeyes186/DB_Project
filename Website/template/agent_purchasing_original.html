@@ -1,0 +1,288 @@
+{% extends 'base.html' %}
+
+{% block head %}
+    <title>My flight</title>
+    <style>
+        body{
+            height: 690px;
+            background-image: url("/static/airplane1.jpeg");
+            background-repeat: no-repeat;
+            background-size: 100% 100%;
+            filter: alpha(opacity=20)
+        }
+
+        div.modal-lg {
+            width: 1200px !important;
+            height: auto !important;
+        }
+
+
+        input[type='text'],
+        input[type='number'],
+        input[type='password'],
+        input[type='date'],
+        input[type='email'],
+
+        select,
+        textarea {
+            outline: none;
+            box-shadow: none !important;
+            border: 1px solid #ccc !important;
+        }
+        .sidebar-left {
+            position:fixed;
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            left:0px;
+            top:8%;
+            width: 15%;
+            background-color: #f1f1f1;
+            position:fixed;
+            height: 95%;
+            /* overflow: auto; */
+        }
+
+        .sidebar-left li a {
+            margin-top:0px;
+            display: block;
+            color: #000;
+            padding: 8px 16px;
+            text-decoration: none;
+            position: relative;
+        }
+        .navbar-top{
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: #333;
+            opacity:1;
+            position: fixed;
+            top: 0;
+            left:0;
+            height:8%;
+            width: 100%;
+            z-index: 1;
+        }
+
+        .navbar-text-li{
+            float: left;
+            font-size:130%;
+            height:100%;
+            margin-top:0px;
+            color: white;
+            /* margin-left: 15%; */
+        }
+        .navbar-text-li-right{
+            float: right;
+            color: white;
+            font-size:130%;
+            height:100%;
+            margin-top:10px;
+            margin-right: 20px;
+        }
+        .navbar-text-li a{
+            display: block;
+            color: white;
+            text-align: center;
+            padding: 14px 16px;
+            height:100%;
+            text-decoration:none;
+            /* margin-left: 15%; */
+        }
+
+        .navbar-text-li a:hover:not(.navbar-text) {
+            background-color: #111;
+        }
+        h1 {
+			padding: 3%;
+		}
+	
+		form {
+			padding-right: 33%;
+			padding-left: 33%;
+			padding-bottom: 30px;
+		}
+	
+		.error {
+			margin: auto;
+			margin-bottom: 10px;
+			width: 450px;
+		}
+    </style>
+{% endblock %}
+<br>
+<br>
+<br>
+<br>
+
+{% block main %}
+
+    {% if username %}
+        <div class="container alert alert-success alert-dismissible" role="success"
+            style="padding-top: 5px; padding-bottom: 5px" id = "username">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"
+                    style="padding-top: 3px; padding-bottom: 0px; height: 26px"><span
+                    aria-hidden="true">&times;</span></button>
+            Welcome, {{ username }} !
+        </div>
+    {% endif %}
+        <ul class="navbar-top" id="navbar">
+            <li class='navbar-text-li'><a class='navbar-text' href=''>Welcome, {{ username }} ! </a></li>
+            <li class='navbar-text-li-right'><a class='navbar-text' href='/logout'>Logout</a></li>
+        </ul>
+
+        <ul class='sidebar-left' id='sidebar' method = 'post'>
+                <li id = 'home'>
+                    <a href = '/home_agent'>Home</a>
+                
+                    <li id = 'flighthistory'>
+                        <a href = '/agent_myflight'>My Flights</a>
+                    </li>
+                    <li id = 'flights'>
+                        <a href = '/agent_search'>Search Flights</a>
+                    </li>
+                    <li id = 'trackspending'>
+                            <a href = '/agent_purchasing'>Buy Tickets</a>
+                    </li>
+                    <li id = 'trackspending'>
+                            <a href = '/agent_mycommission'>My Commission</a>
+                    </li>
+                    <li id = 'trackspending'>
+                        <a href = '/agent_topcustomers'>Top Customers</a>
+                    </li>
+                </li>
+
+        </ul>
+        </div>
+    </div>
+<br>
+<br>
+<br>
+<br>
+<br>
+{% if not purchase %}
+<h3 class="text-left" style="padding-left: 330px">  
+        Enter information to purchase:
+</h3>
+<br>
+
+
+<form action="/agent_purchasing" method="POST" style="padding-left: 90px; padding-right: 100px">
+    <div class="form-group row" style="width:1000px; padding-left: 270px">
+        <label for="example-text-input" class="col-4 col-form-label">Enter client email:</label>
+        <div class="col-6">
+            <input type="text" class="form-control"  name = "customer_email"
+                placeholder="abc@email.com" 
+                aria-label="Search term"
+                aria-describedby="basic-addon" value="{{ request.form.customer_email }}">
+        </div>
+    </div>
+        <div class="container" id="searchforflight" style="padding-top: 24px; width:600px">
+            <div class="row">
+                <div class="col-md-6 col-sm-6 col-lg-6">
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" name="airline_name"
+                            placeholder="Airline name"
+                            aria-label="Search term"
+                            aria-describedby="basic-addon" value="{{ request.form.airline_name }}">
+                    </div>
+                </div>
+                <div class="col-md-6 col-sm-6 col-lg-6">
+                        <div class="input-group mb-3">
+                            <input type="text" class="form-control" name="flight_number"
+                                placeholder="Flight number"
+                                aria-label="Search term"
+                                aria-describedby="basic-addon" value="{{ request.form.flight_number }}">
+                        </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6 col-sm-6 col-lg-6">
+                    <div class="input-group mb-3">
+                        <input type="text" onfocus="(this.type='date')" class="form-control" name="depart_date_time"
+                            placeholder="Departure date and time"
+                            aria-label="Search term"
+                            aria-describedby="basic-addon" value="{{ request.form.depart_date_time }}">
+                    </div>
+                </div>
+                <div class="col-md-6 col-sm-6 col-lg-6">
+                        <div class="input-group mb-3">
+                            <input type="text"  class="form-control" name="card_type"
+                                placeholder="Debit/Credit"
+                                aria-label="Card type"
+                                aria-describedby="basic-addon" value="{{ request.form.card_type }}">
+                        </div>
+                </div>
+            </div>  
+
+            <div class="row">
+
+                <div class="col-md-6 col-sm-6 col-lg-6">
+                        <div class="input-group mb-3">
+                            <input type="text"  class="form-control" name="card_num"
+                                placeholder="Enter your card number"
+                                aria-label="Card Number"
+                                aria-describedby="basic-addon" value="{{ request.form.card_num }}">
+                        </div>
+                </div>
+                <div class="col-md-6 col-sm-6 col-lg-6">
+                        <div class="input-group mb-3">
+                            <input type="text"  class="form-control" name="name_on_card"
+                                placeholder="Name on Card"
+                                aria-label="Name on Card"
+                                aria-describedby="basic-addon" value="{{ request.form.name_on_card }}">
+                        </div>
+                </div>
+
+            </div>
+            <div class="row">
+
+                <div class="col-md-6 col-sm-6 col-lg-6">
+                    <div class="input-group mb-3">
+                        <input type="text" onfocus="(this.type='date')" class="form-control" name="expiration_dare"
+                            placeholder="Expiration date and time"
+                            aria-label="Expiration date and time"
+                            aria-describedby="basic-addon" value="{{ request.form.expiration_dare }}">
+                    </div>
+                </div>
+                <div class="col-md-6 col-sm-6 col-lg-6">
+                        <div class="input-group mb-3">
+                            <button class="btn btn-info btn-lg btn-block" type="submit">
+                                <strong>Purchase!</strong>
+                            </button>
+                        </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+{% endif %}
+
+{% if  purchase %}
+    <h2 class="text-left" style="padding-left: 580px">  
+            Thanks for purchasing :) 
+    </h2>
+    <h3 class="text-left" style="padding-left: 580px">  
+            Looking forward to traveling with you 
+    </h3>
+    <center>
+        <br>
+        <br>
+        <div><a href="/agent_purchasing">Buy another tickets?</a></div>
+        <br>
+        <div><a href="/agent_search">Search other flights?</a></div>
+        <br>
+        <div><a href="/home_agent">Go back to home page?</a></div>
+    </center>
+{% endif %}
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+{% endblock %}

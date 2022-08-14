@@ -1,0 +1,231 @@
+{% extends 'base.html' %}
+
+{% block head %}
+    <title>My flight</title>
+    <style>
+        body{
+            height: 827px;
+            background-image: url("/static/airplane1.jpeg");
+            background-repeat: no-repeat;
+            background-size: 100% 100%;
+            filter: alpha(opacity=20)
+        }
+
+        div.modal-lg {
+            width: 1200px !important;
+            height: auto !important;
+        }
+
+        input[type='text'],
+        input[type='number'],
+        input[type='password'],
+        input[type='date'],
+        input[type='email'],
+
+        select,
+        textarea {
+            outline: none;
+            box-shadow: none !important;
+            border: 1px solid #ccc !important;
+        }
+        .sidebar-left {
+            position:fixed;
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            left:0px;
+            top:8%;
+            width: 15%;
+            background-color: #f1f1f1;
+            position:fixed;
+            height: 95%;
+            /* overflow: auto; */
+        }
+
+        .sidebar-left li a {
+            margin-top:0px;
+            display: block;
+            color: #000;
+            padding: 8px 16px;
+            text-decoration: none;
+            position: relative;
+        }
+        .navbar-top{
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: #333;
+            opacity:1;
+            position: fixed;
+            top: 0;
+            left:0;
+            height:8%;
+            width: 100%;
+            z-index: 1;
+        }
+
+        .navbar-text-li{
+            float: left;
+            font-size:130%;
+            height:100%;
+            margin-top:0px;
+            color: white;
+            /* margin-left: 15%; */
+        }
+        .navbar-text-li-right{
+            float: right;
+            color: white;
+            font-size:130%;
+            height:100%;
+            margin-top:10px;
+            margin-right: 20px;
+        }
+        .navbar-text-li a{
+            display: block;
+            color: white;
+            text-align: center;
+            padding: 14px 16px;
+            height:100%;
+            text-decoration:none;
+            /* margin-left: 15%; */
+        }
+
+        .navbar-text-li a:hover:not(.navbar-text) {
+            background-color: #111;
+        }
+    </style>
+{% endblock %}
+<br>
+<br>
+<br>
+<br>
+
+{% block main %}
+
+    {% if username %}
+        <div class="container alert alert-success alert-dismissible" role="success"
+            style="padding-top: 5px; padding-bottom: 5px" id = "username">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"
+                    style="padding-top: 3px; padding-bottom: 0px; height: 26px"><span
+                    aria-hidden="true">&times;</span></button>
+            Welcome, {{ username }} !
+        </div>
+    {% endif %}
+        <ul class="navbar-top" id="navbar">
+            <li class='navbar-text-li'><a class='navbar-text' href=''>Welcome, {{ username }} ! </a></li>
+            <li class='navbar-text-li-right'><a class='navbar-text' href='/logout'>Logout</a></li>
+        </ul>
+
+        <ul class='sidebar-left' id='sidebar'>
+                <li id = 'home'>
+                    <a href = '/home_agent'>Home</a>
+                </li>
+                    <li id = 'flighthistory'>
+                        <a href = '/agent_myflight'>My Flights</a>
+                    </li>
+                    <li id = 'flights'>
+                        <a href = '/agent_search'>Search Flights</a>
+                    </li>
+                    <li id = 'trackspending'>
+                            <a href = '/agent_purchasing'>Buy Tickets</a>
+                    </li>
+                    <li id = 'trackspending'>
+                            <a href = '/agent_mycommission'>My Commission</a>
+                    </li>
+                    <li id = 'trackspending'>
+                        <a href = '/agent_topcustomers'>Top Customers</a>
+                    </li>
+                </li>
+
+        </ul>
+        </div>
+    </div>
+
+    <ul class="list-group" style="padding-top: 50px; padding-left:320px; width: 800px;">
+            <li class="list-group-item list-group-item-info" style="width: 800px;"><strong> My commission in 30 days:</strong></li>
+            {% if total %}
+                <li class="list-group-item list-group-item-light"  style="width: 800px;">Total amount of commission received in the past 30 days: {{ total }}.</li>
+            {% endif %}
+            {% if average %}
+                <li class="list-group-item list-group-item-light"  style="width: 800px;">Average commission received per ticket in the past 30 days: {{ average }}.</li>
+            {% endif %}
+            {% if num_of_tickets %}
+            <li class="list-group-item list-group-item-light"  style="width: 800px;">Number of tickets sold in the past 30 days: {{ num_of_tickets }}.</li>
+            {% endif %}
+    </ul>
+
+    <center>
+    <h4 class="text-left" style="padding-left: 290px; padding-top: 50px;">  
+        Search for commission with a range below:
+    </h4></center>
+
+    <form action="/agent_mycommission" method="POST"  style="padding-left: 50px; padding-bottom: 20px; padding-top:50px;">
+        <div class="container" id="mycommission" style="width: 600px">
+            <div class="row">
+                <div class="col-md-6 col-sm-6 col-lg-6">
+                    <div class="input-group mb-3">
+                        <input type="text" onfocus="(this.type='date')" class="form-control" name="from_date"
+                            placeholder="Start Date"
+                            aria-label="Search term"
+                            aria-describedby="basic-addon" value="{{ request.form.from_date }}">
+                    </div>
+                </div>
+                <div class="col-md-6 col-sm-6 col-lg-6">
+                    <div class="input-group" mb-3>
+                        <input type="text" onfocus="(this.type='date')" class="form-control" name="to_date"
+                            placeholder="End Date"
+                            aria-label="Search term"
+                            aria-describedby="basic-addon" value="{{ request.form.to_date }}">
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6 col-sm-6 col-lg-6">
+                </div>
+                <div class="col-md-6 col-sm-6 col-lg-6">
+                    <div class="input-group mb-3">
+                        <button class="btn btn-info btn-lg btn-block" type="submit">
+                            <strong>Check!</strong>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+
+{% if show %}
+    {% if no_comm %}
+    <ul class="list-group" style="padding-top: 20px; padding-left:320px; width: 800px;">
+        <li class="list-group-item list-group-item-info" style="width: 800px;"><strong> No commission in this period.</strong></li>
+    </ul>
+    {% endif %}
+    {% if not no_comm %}
+    <ul class="list-group" style="padding-top: 20px; padding-left:320px; width: 800px;">
+        <li class="list-group-item list-group-item-info" style="width: 800px;"><strong> my commission:</strong></li>
+        {% if range_total %}
+            <li class="list-group-item list-group-item-light"  style="width: 800px;">Total amount of commission received in the range: {{ range_total }}.</li>
+        {% endif %}
+        {% if range_num_tkts %}
+            <li class="list-group-item list-group-item-light"  style="width: 800px;">Number of tickets sold in the range: {{ range_num_tkts }}.</li>
+        {% endif %}
+    </ul>
+    {% endif %}
+{% endif %}
+
+
+
+    <!-- <div style="padding-left: 290px; padding-bottom: 20px">
+        {% if range_total %}
+            Total amount of commission received in the range: {{ range_total }}.
+        {% endif %}
+    </div> -->
+    
+    <!-- <div style="padding-left: 290px; padding-bottom: 20px">
+        {% if range_num_tkts %}
+            Number of tickets sold in the range: {{ range_num_tkts }}.
+        {% endif %}
+    </div> -->
+
+
+{% endblock %}

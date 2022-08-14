@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html style="height: 100%">
+<head>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
+    <style>
+    body{
+        background-image: url('static/sky.jpg');
+        background-size: 100%;
+    }
+        input[type='text'],
+        input[type='number'],
+        input[type='password'],
+        input[type='date'],
+        textarea {
+            outline: none;
+            box-shadow: none !important;
+            border: 1px solid #ccc !important;
+        }
+    </style>
+    <title>Register</title>
+</head>
+
+<body style="height: 600px; padding-top: 200px;" data-gr-c-s-loaded="true">
+<main id="main" class="site-main main">
+    <div class="row justify-content-center">
+        <form class="form" method="post">
+
+            {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert alert-warning" role="alert">
+                          <p class="mb-0">Oops! {{ message }}</p>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            <div class="form-row">
+                <div class="form-group col-md-12">
+                    <center>
+                        <h1 class="h3 mb-3 font-weight-normal" style="font-size: 300%">Hi, sign up</h1>
+                    </center>
+                </div>
+            </div>
+
+            <div class="input-group mb-3">
+              <select class="custom-select" id="role" aria-label="Example select with button addon">
+                <option selected>Choose Your Role</option>
+                <option value="1">Customer</option>
+                <option value="2">Booking Agent</option>
+                <option value="3">Airline Staff</option>
+              </select>
+            </div>
+
+            <button class="btn btn-lg btn-secondary btn-block" type="submit" onclick="register_suc()">
+                Register
+            </button>
+            <br>
+            <center>
+                <div>Already have an account? <a href="../login">Login now </a></div>
+
+            </center>
+        </form>
+    </div>
+</main>
+
+<script>
+ function register_suc() {
+        var e = document.getElementById("role");
+        var role = e.options[e.selectedIndex].value;
+
+        if (role == 1) {
+            document.write('');
+            window.location.assign("/register_customer");
+        }
+
+
+        if (role == 2) {
+            document.write('');
+            window.location.assign("/register_agent");
+        }
+
+
+        if (role == 3) {
+            document.write('');
+            window.location.assign("/register_staff");
+        }
+    }
+
+</script>
+</body>
+
+</html>

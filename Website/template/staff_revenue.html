@@ -1,0 +1,183 @@
+{% extends 'base.html' %}
+
+{% block head %}
+    <title>Airline Staff home page</title>
+    <style>
+        body{
+            height: 900px;
+            background-image: url("/static/airplane1.jpeg");
+            background-repeat: no-repeat;
+            background-size: 100% 100%;
+            filter: alpha(opacity=20)
+        }
+
+        div.modal-lg {
+            width: 1200px !important;
+            height: auto !important;
+        }
+
+
+        input[type='text'],
+        input[type='number'],
+        input[type='password'],
+        input[type='date'],
+        input[type='email'],
+
+        select,
+        textarea {
+            outline: none;
+            box-shadow: none !important;
+            border: 1px solid #ccc !important;
+        }
+        .sidebar-left {
+            position:fixed;
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            left:0px;
+            top:8%;
+            width: 15%;
+            background-color: #f1f1f1;
+            position:fixed;
+            height: 95%;
+            /* overflow: auto; */
+        }
+
+        .sidebar-left li a {
+            margin-top:0px;
+            display: block;
+            color: #000;
+            padding: 8px 16px;
+            text-decoration: none;
+            position: relative;
+        }
+        .navbar-top{
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: #333;
+            opacity:1;
+            position: fixed;
+            top: 0;
+            left:0;
+            height:8%;
+            width: 100%;
+        }
+
+        .navbar-text-li{
+            float: left;
+            font-size:130%;
+            height:100%;
+            margin-top:0px;
+            color: white;
+            /* margin-left: 15%; */
+        }
+        .navbar-text-li-right{
+            float: right;
+            color: white;
+            font-size:130%;
+            height:100%;
+            margin-top:10px;
+            margin-right: 20px;
+        }
+        .navbar-text-li a{
+            display: block;
+            color: white;
+            text-align: center;
+            padding: 14px 16px;
+            height:100%;
+            text-decoration:none;
+            /* margin-left: 15%; */
+        }
+
+        .navbar-text-li a:hover:not(.navbar-text) {
+            background-color: #111;
+        }
+    </style>
+{% endblock %}
+
+{% block main %}
+    {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                        <div class="container alert alert-danger alert-dismissible" role="alert" style="padding-top: 0px">
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close" style="padding-top: 0px; padding-bottom: 0px"><span
+                                    aria-hidden="true">&times;</span></button>
+                            {{ messages }}
+                        </div>
+                {% endif %}
+            {% endwith %}
+    <div class="background">
+
+    
+        <ul class="navbar-top" id="navbar">
+            {% if username %}
+            <li class='navbar-text-li'><a class='navbar-text' href=''> Welcome, {{ username }} ! </a></li>
+            {% endif %}
+            <li class='navbar-text-li-right'><a class='navbar-text' href='/logout'>Logout</a></li>
+        </ul>
+
+        <ul class='sidebar-left' id='sidebar' method = 'post'>
+                <li id = 'home'>
+                    <a href = '/home_staff'>Home</a>
+                </li>
+                <li id = 'flighthistory'>
+                        <a href = '/staff_search_flight'>Search Flights</a>
+                    </li>
+                    <li id = 'flights'>
+                        <a href = '/staff_update_flights'>Update Flights</a>
+                    </li>
+                    <li id = 'staff_allagents'>
+                            <a href = '/staff_allagents'>View all agent</a>
+                    </li>
+                    <li id = 'frequent_customer'>
+                        <a href = '/staff_frequent_customer'>View Frequent Customer</a>
+                    </li>
+                    <li id = 'view_report'>
+                            <a href = '/staff_view_report'>View Reports</a>
+                    </li>
+                    <li id = 'revenue'>
+                            <a href = '/staff_revenue'>View Revenue</a>
+                    </li>
+                    <li id = 'destination'>
+                            <a href = '/staff_destination'>View Destinations</a>
+                    </li>
+                </li>
+
+        </ul>
+    <br>
+    <br>
+    <br>
+  
+    <h3 class="text-left" style="padding-left: 290px; padding-top: 50px;">
+        Comparison of Revenue earned:
+    </h3>
+    <canvas id="pieChart"style="padding-top: 50px;"></canvas>
+    
+</div>
+
+    //pie
+        <script>
+        var ctxP = document.getElementById("pieChart").getContext('2d');
+        var myPieChart = new Chart(ctxP, {
+        type: 'pie',
+        data: {
+        labels: ['30 days deirect', '30 days indirect', 'one year direct', 'one year indirect'],
+        datasets: [{
+        data: [{% for value in labels %}
+                        {{value['v']}},
+                    {% endfor %}],
+        backgroundColor: ["#F7464A", "#46BFBD", "#FDB45C", "#949FB1", "#4D5360"],
+        hoverBackgroundColor: ["#FF5A5E", "#5AD3D1", "#FFC870", "#A8B3C5", "#616774"]
+        }]
+        },
+        options: {
+        responsive: true
+        }
+        });
+    </script>
+
+
+
+
+{% endblock %}
